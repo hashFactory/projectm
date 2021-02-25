@@ -145,9 +145,11 @@ public:
         bool softCutRatingsEnabled;
 
         Settings() :
-            meshX(32),
-            meshY(24),
-            fps(35),
+            meshX(128),
+            //meshX(32),
+            //meshY(24),
+            meshY(96),
+            fps(60),
             textureSize(512),
             windowWidth(512),
             windowHeight(512),

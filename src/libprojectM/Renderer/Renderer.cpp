@@ -465,6 +465,7 @@ void Renderer::RenderFrame(const Pipeline& pipeline,
 	Pass2(pipeline, pipelineContext);
 }
 
+// RENDERFRAME
 void Renderer::RenderFrameOnlyPass1(const Pipeline& pipeline, const PipelineContext& pipelineContext)
 {
 	shaderEngine.RenderBlurTextures(pipeline, pipelineContext);

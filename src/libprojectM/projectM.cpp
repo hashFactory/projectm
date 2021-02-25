@@ -323,6 +323,9 @@ void projectM::renderFrame()
     
     renderFrameOnlyPass2(comboPipeline,0,0,0);
     
+    printf("rendered frame with width %d and height %d\n", settings().windowWidth, settings().windowHeight);
+    
+    
     projectM::renderFrameEndOnSeparatePasses(comboPipeline);
 }
 

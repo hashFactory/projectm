@@ -269,7 +269,7 @@ private:
   
 int nearestPower2( int value );
 
-  GLuint textureRenderToTexture;
+  GLuint textureRenderToTexture = true;
 
   void InitCompositeShaderVertex();
   float SquishToCenter(float x, float fExp);
