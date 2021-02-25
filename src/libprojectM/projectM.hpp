@@ -147,10 +147,17 @@ public:
         bool softCutRatingsEnabled;
 
         Settings() :
+<<<<<<< HEAD
             meshX(32),
             //meshX(32),
             //meshY(24),
             meshY(24),
+=======
+            meshX(128),
+            //meshX(32),
+            //meshY(24),
+            meshY(96),
+>>>>>>> ed04e5eb (Preliminary frame saving)
             fps(60),
             textureSize(512),
             windowWidth(512),

@@ -334,6 +334,7 @@ void projectM::renderFrame()
     
     renderFrameOnlyPass2(comboPipeline,0,0,0);
     
+<<<<<<< HEAD
     short width = settings().windowWidth;
     short height = settings().windowHeight;
     
@@ -375,6 +376,9 @@ void projectM::renderFrame()
      */
     
     printf("%d\n", count);
+=======
+    printf("rendered frame with width %d and height %d\n", settings().windowWidth, settings().windowHeight);
+>>>>>>> ed04e5eb (Preliminary frame saving)
     
     
     projectM::renderFrameEndOnSeparatePasses(comboPipeline);
