@@ -94,7 +94,7 @@ public:
     bool stretch = false; // used for toggling stretch mode
     projectMSDL(Settings settings, int flags);
     projectMSDL(std::string config_file, int flags);
-    void init(SDL_Window *window, SDL_GLContext *glCtx, const bool renderToTexture = true);
+    void init(SDL_Window *window, SDL_GLContext *glCtx, const bool renderToTexture = false);
     int openAudioInput();
     int toggleAudioInput();
     int initAudioInput();

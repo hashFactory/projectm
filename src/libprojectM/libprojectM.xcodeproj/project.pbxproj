@@ -898,7 +898,10 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				FRAMEWORK_SEARCH_PATHS = /Library/Frameworks;
+				FRAMEWORK_SEARCH_PATHS = (
+					/Library/Frameworks,
+					"/usr/local/Cellar/imagemagick/HEAD-a781824/lib",
+				);
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -915,6 +918,7 @@
 					/usr/local/include,
 					"$(SRCROOT)/Renderer/hlslparser/src",
 					"$(SRCROOT)/../../vendor",
+					"/usr/local/Cellar/imagemagick/7.0.10-61/include/ImageMagick-7",
 				);
 				LIBRARY_SEARCH_PATHS = /Library/Frameworks;
 				MACOSX_DEPLOYMENT_TARGET = 11.1;
@@ -922,6 +926,14 @@
 				OTHER_CFLAGS = (
 					"-fno-stack-check",
 					"-DHAVE_FTS_H",
+				);
+				OTHER_LDFLAGS = (
+					"-L/usr/local/Cellar/imagemagick/7.0.10-61/lib",
+					"-lMagick++-7.Q16HDRI",
+					"-lMagickWand-7.Q16HDRI",
+					"-lMagickCore-7.Q16HDRI",
+					"-DMAGICKCORE_HDRI_ENABLE=1",
+					"-DMAGICKCORE_QUANTUM_DEPTH=8",
 				);
 			};
 			name = Debug;
@@ -935,7 +947,10 @@
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				FRAMEWORK_SEARCH_PATHS = /Library/Frameworks;
+				FRAMEWORK_SEARCH_PATHS = (
+					/Library/Frameworks,
+					"/usr/local/Cellar/imagemagick/HEAD-a781824/lib",
+				);
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = fast;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -951,6 +966,7 @@
 					/usr/local/include,
 					"$(SRCROOT)/Renderer/hlslparser/src",
 					"$(SRCROOT)/../../vendor",
+					"/usr/local/Cellar/imagemagick/7.0.10-61/include/ImageMagick-7",
 				);
 				LIBRARY_SEARCH_PATHS = /Library/Frameworks;
 				MACOSX_DEPLOYMENT_TARGET = 11.1;
@@ -958,6 +974,14 @@
 				OTHER_CFLAGS = (
 					"-fno-stack-check",
 					"-DHAVE_FTS_H",
+				);
+				OTHER_LDFLAGS = (
+					"-L/usr/local/Cellar/imagemagick/7.0.10-61/lib",
+					"-lMagick++-7.Q16HDRI",
+					"-lMagickWand-7.Q16HDRI",
+					"-lMagickCore-7.Q16HDRI",
+					"-DMAGICKCORE_HDRI_ENABLE=1",
+					"-DMAGICKCORE_QUANTUM_DEPTH=8",
 				);
 			};
 			name = Release;

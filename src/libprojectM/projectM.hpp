@@ -60,6 +60,8 @@
 #pragma comment(lib, "kernel32.lib")
 #endif /** WIN32 */
 
+#include <ImageMagick-7/Magick++.h>
+
 #include "dlldefs.h"
 #include "event.h"
 #include "fatal.h"
@@ -145,10 +147,10 @@ public:
         bool softCutRatingsEnabled;
 
         Settings() :
-            meshX(128),
+            meshX(32),
             //meshX(32),
             //meshY(24),
-            meshY(96),
+            meshY(24),
             fps(60),
             textureSize(512),
             windowWidth(512),
@@ -348,6 +350,13 @@ private:
   int timestart;
   int count;
   float fpsstart;
+    
+    // MY SECTION
+    Magick::Image img;
+    int* buffer;
+    
+    struct timeval before;
+    struct timeval now;
 
   void readConfig(const std::string &configFile);
   void readSettings(const Settings &settings);

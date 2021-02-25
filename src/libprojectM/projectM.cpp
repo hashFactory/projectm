@@ -54,6 +54,14 @@
 #include "TimeKeeper.hpp"
 #include "RenderItemMergeFunction.hpp"
 
+// for frame saving
+#include <fstream>
+#include <cstdio>
+#include <ImageMagick-7/Magick++.h>
+
+//#define MAGICKCORE_HDRI_ENABLE 1
+//#define MAGICKCORE_QUANTUM_DEPTH 8
+
 #ifdef USE_THREADS
 #include "pthread.h"
 
@@ -120,7 +128,6 @@ projectM::projectM ( std::string config_file, int flags) :
     readConfig(config_file);
     projectM_reset();
     projectM_resetGL(_settings.windowWidth, _settings.windowHeight);
-
 }
 
 projectM::projectM(Settings settings, int flags):
@@ -129,7 +136,11 @@ projectM::projectM(Settings settings, int flags):
 {
     readSettings(settings);
     projectM_reset();
+    _settings.windowWidth = 640;
+    _settings.windowHeight = 360;
     projectM_resetGL(_settings.windowWidth, _settings.windowHeight);
+    buffer = new int[ _settings.windowWidth * _settings.windowHeight * 3 * 4 ];
+    img.quality(0);
 }
 
 
@@ -323,16 +334,51 @@ void projectM::renderFrame()
     
     renderFrameOnlyPass2(comboPipeline,0,0,0);
     
-    printf("rendered frame with width %d and height %d\n", settings().windowWidth, settings().windowHeight);
+    short width = settings().windowWidth;
+    short height = settings().windowHeight;
+    
+    printf("rendered frame with width %d and height %d\n", width, height);
+    
+    // Write buffer to file
+    std::string tga_filename = "frames/frame_" + std::to_string(count) + ".png";
+    
+    //   WRITING RAW BUFFER
+    FILE *tga_file = fopen(tga_filename.c_str(), "w");
+    //std::ofstream tga_file;
+    //tga_file.open(tga_filename, std::ios::binary | std::ios::trunc);
+    short  TGAhead[] = {0, 2, 0, 0, 0, 0, width, height, 24};
+    //tga_file.write((char*)TGAhead, sizeof(short) * 9);
+    fwrite(&TGAhead, sizeof(TGAhead), 1, tga_file);
+    
+    
+    glReadPixels(0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, buffer);
+    fwrite(buffer, width * height * 3, 1, tga_file);
+    
+    printf("wrote to %s\n", tga_filename.c_str());
+    
+    fclose(tga_file);
+    
+    before = now;
+    now = GetCurrentTime();
+    
+    int diff = ((now.tv_usec - before.tv_usec) + 1000000) % 1000000;
+    
+    printf("microseconds: %d\n", diff);
+    
+    // Maybe later on find а better way to write compressed images
+    /*
+    glReadPixels(0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, buffer);
+    
+    img.read(width, height, "RGB", Magick::CharPixel, buffer);
+    img.quality(0);
+    img.write(tga_filename);
+     */
+    
+    printf("%d\n", count);
     
     
     projectM::renderFrameEndOnSeparatePasses(comboPipeline);
 }
-
-
-
-
-
 
 
 

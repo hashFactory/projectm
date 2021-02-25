@@ -379,6 +379,7 @@ srand((int)(time(NULL)));
         projectM::Settings settings;
         settings.windowWidth = width;
         settings.windowHeight = height;
+        
         settings.meshX = 128;
         settings.meshY = settings.meshX * heightWidthRatio;
 		settings.fps = maxRefreshRate;
@@ -399,7 +400,9 @@ srand((int)(time(NULL)));
         // init with settings
         app = new projectMSDL(settings, 0);
     }
-
+    
+    std::cout << "WIDTH = " << app->getWindowWidth() << "\n";
+    
     // If our config or hard-coded settings create a resolution smaller than the monitors, then resize the SDL window to match.
     if (height > app->getWindowHeight() || width > app->getWindowWidth()) {
         SDL_SetWindowSize(win, app->getWindowWidth(),app->getWindowHeight());
