@@ -334,14 +334,13 @@ void projectM::renderFrame()
     
     renderFrameOnlyPass2(comboPipeline,0,0,0);
     
-<<<<<<< HEAD
     short width = settings().windowWidth;
     short height = settings().windowHeight;
     
-    printf("rendered frame with width %d and height %d\n", width, height);
+    printf("rendered frame %d with width %d and height %d\n", count, width, height);
     
     // Write buffer to file
-    std::string tga_filename = "frames/frame_" + std::to_string(count) + ".png";
+    std::string tga_filename = "frames/frame_" + std::to_string(count) + ".tga";
     
     //   WRITING RAW BUFFER
     FILE *tga_file = fopen(tga_filename.c_str(), "w");
@@ -376,10 +375,6 @@ void projectM::renderFrame()
      */
     
     printf("%d\n", count);
-=======
-    printf("rendered frame with width %d and height %d\n", settings().windowWidth, settings().windowHeight);
->>>>>>> ed04e5eb (Preliminary frame saving)
-    
     
     projectM::renderFrameEndOnSeparatePasses(comboPipeline);
 }

@@ -419,29 +419,7 @@ void TextureManager::updateMainTexture()
 {
     glBindTexture(GL_TEXTURE_2D, mainTexture->texID);
     glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, mainTexture->width, mainTexture->height);
-    
-<<<<<<< HEAD
-=======
-    // Write buffer to file
-    std::string tga_filename = "file.tga";
-    
-    FILE *tga_file = fopen(tga_filename.c_str(), "w");
-    //std::ofstream tga_file;
-    //tga_file.open(tga_filename, std::ios::binary | std::ios::trunc);
-    short  TGAhead[] = {0, 2, 0, 0, 0, 0, static_cast<short>(mainTexture->width), static_cast<short>(mainTexture->height), 24};
-    //tga_file.write((char*)TGAhead, sizeof(short) * 9);
-    fwrite(&TGAhead, sizeof(TGAhead), 1, tga_file);
-    
-    int* buffer = new int[ mainTexture->width * mainTexture->height * 3 ];
-    glReadPixels(0, 0, mainTexture->width, mainTexture->height, GL_RGB, GL_UNSIGNED_BYTE, buffer);
-    fwrite(buffer, mainTexture->width * mainTexture->height * 3, 1, tga_file);
-    
-    printf("write to %s\n", tga_filename.c_str());
-    
-    fclose(tga_file);
-    //tga_file.write(buffer, mainTexture->width * mainTexture->height * 3);
-    
->>>>>>> ed04e5eb (Preliminary frame saving)
+
     //glGetTexImage(GL_TEXTURE_2D, 0, GL_RGB, mainTexture->type, mainTexture->width, mainTexture->height, )
     glBindTexture(GL_TEXTURE_2D, 0);
 }
