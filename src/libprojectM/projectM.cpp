@@ -65,6 +65,7 @@
 
 #ifdef USE_THREADS
 #include "pthread.h"
+#include <thread>
 
 #include "BackgroundWorker.h"
 
@@ -140,7 +141,6 @@ projectM::projectM(Settings settings, int flags):
     _settings.windowWidth = 640;
     _settings.windowHeight = 360;
     projectM_resetGL(_settings.windowWidth, _settings.windowHeight);
-    buffer = new int[ _settings.windowWidth * _settings.windowHeight * 3 * 4 ];
     
     initWrite();
 }
@@ -336,6 +336,25 @@ void projectM::initWrite()
     now = GetCurrentTime();
 }
 
+void projectM::threadedWrite(std::string filename, short width, short height, double diff, int *buff)
+{
+    // WRITING RAW BUFFER
+    FILE *tga_file = fopen(filename.c_str(), "w");
+    // TODO: Definitely put this in another thread
+    //std::ofstream tga_file;
+    //tga_file.open(tga_filename, std::ios::binary | std::ios::trunc);
+    short  TGAhead[] = {0, 2, 0, 0, 0, 0, width, height, 24};
+    //tga_file.write((char*)TGAhead, sizeof(short) * 9);
+    fwrite(&TGAhead, sizeof(TGAhead), 1, tga_file);
+    
+    fwrite(buff, width * height * 3, 1, tga_file);
+    
+    printf("wrote to %s\n", filename.c_str());
+    
+    fclose(tga_file);
+    free(buff);
+}
+
 void projectM::writeToFile()
 {
     short width = settings().windowWidth;
@@ -349,27 +368,17 @@ void projectM::writeToFile()
     // Write buffer to file
     std::string tga_filename = "frames/frame_" + std::to_string(count) + ".tga";
     
-    // WRITING RAW BUFFER
-    FILE *tga_file = fopen(tga_filename.c_str(), "w");
-    // TODO: Definitely put this in another thread
-    //std::ofstream tga_file;
-    //tga_file.open(tga_filename, std::ios::binary | std::ios::trunc);
-    short  TGAhead[] = {0, 2, 0, 0, 0, 0, width, height, 24};
-    //tga_file.write((char*)TGAhead, sizeof(short) * 9);
-    fwrite(&TGAhead, sizeof(TGAhead), 1, tga_file);
-    
+    int* buffer = new int[ _settings.windowWidth * _settings.windowHeight * 3 * 4 ];
     glReadPixels(0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, buffer);
-    fwrite(buffer, width * height * 3, 1, tga_file);
-    
-    printf("wrote to %s\n", tga_filename.c_str());
-    
-    fclose(tga_file);
     
     double diff;
     if (now.tv_sec > before.tv_sec)
         diff = (((now.tv_usec + 1000000.0) - before.tv_usec) / 1000000.0);
     else
         diff = ((now.tv_usec - before.tv_usec) / 1000000.0);
+    
+    std::thread t(projectM::threadedWrite, tga_filename, width, height, diff, buffer);
+    t.detach();
     
     fprintf(concat, "file %s\nduration %.5f\n", tga_filename.c_str(), diff);
     fflush(concat);

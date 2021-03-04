@@ -189,6 +189,7 @@ public:
     
   void initWrite();
   void writeToFile();
+    static void threadedWrite(std::string filename, short width, short height, double diff, int *buff);
 
   virtual ~projectM();
 
