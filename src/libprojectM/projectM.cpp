@@ -140,6 +140,7 @@ projectM::projectM(Settings settings, int flags):
     _settings.windowHeight = 360;
     projectM_resetGL(_settings.windowWidth, _settings.windowHeight);
     buffer = new int[ _settings.windowWidth * _settings.windowHeight * 3 * 4 ];
+    
     img.quality(0);
 }
 
@@ -173,7 +174,7 @@ bool projectM::writeConfig(const std::string & configFile, const Settings & sett
 }
 
 
-
+// TODO: add config read/write support for wantToWrite
 void projectM::readConfig (const std::string & configFile )
 {
     std::cout << "[projectM] config file: " << configFile << std::endl;
@@ -325,15 +326,8 @@ void projectM::evaluateSecondPreset()
     m_activePreset2->Render(*beatDetect, pipelineContext2());
 }
 
-void projectM::renderFrame()
+void projectM::writeToFile()
 {
-    Pipeline pipeline;
-    Pipeline *comboPipeline;
-    
-    comboPipeline = renderFrameOnlyPass1(&pipeline);
-    
-    renderFrameOnlyPass2(comboPipeline,0,0,0);
-    
     short width = settings().windowWidth;
     short height = settings().windowHeight;
     
@@ -342,14 +336,13 @@ void projectM::renderFrame()
     // Write buffer to file
     std::string tga_filename = "frames/frame_" + std::to_string(count) + ".tga";
     
-    //   WRITING RAW BUFFER
+    // WRITING RAW BUFFER
     FILE *tga_file = fopen(tga_filename.c_str(), "w");
     //std::ofstream tga_file;
     //tga_file.open(tga_filename, std::ios::binary | std::ios::trunc);
     short  TGAhead[] = {0, 2, 0, 0, 0, 0, width, height, 24};
     //tga_file.write((char*)TGAhead, sizeof(short) * 9);
     fwrite(&TGAhead, sizeof(TGAhead), 1, tga_file);
-    
     
     glReadPixels(0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, buffer);
     fwrite(buffer, width * height * 3, 1, tga_file);
@@ -375,6 +368,19 @@ void projectM::renderFrame()
      */
     
     printf("%d\n", count);
+}
+
+void projectM::renderFrame()
+{
+    Pipeline pipeline;
+    Pipeline *comboPipeline;
+    
+    comboPipeline = renderFrameOnlyPass1(&pipeline);
+    
+    renderFrameOnlyPass2(comboPipeline,0,0,0);
+    
+    //if (_settings.wantToWrite)
+    //    projectM::writeToFile();
     
     projectM::renderFrameEndOnSeparatePasses(comboPipeline);
 }

@@ -145,6 +145,9 @@ public:
         float easterEgg;
         bool shuffleEnabled;
         bool softCutRatingsEnabled;
+        
+        bool wantToWrite;
+        std::string ffconcat_filename;
 
         Settings() :
             meshX(128),
@@ -165,7 +168,9 @@ public:
             aspectCorrection(true),
             easterEgg(0.0),
             shuffleEnabled(true),
-            softCutRatingsEnabled(false) {}
+            softCutRatingsEnabled(false),
+            wantToWrite(true),
+            ffconcat_filename("concat.txt")  {}
     };
 
   projectM(std::string config_file, int flags = FLAG_NONE);
@@ -181,6 +186,8 @@ public:
   unsigned initRenderToTexture();
   void key_handler( projectMEvent event,
 		    projectMKeycode keycode, projectMModifier modifier );
+    
+  void writeToFile();
 
   virtual ~projectM();
 
@@ -340,7 +347,6 @@ private:
   PipelineContext * _pipelineContext;
   PipelineContext * _pipelineContext2;
   Settings _settings;
-
 
   int wvw;      //windowed dimensions
   int wvh;
