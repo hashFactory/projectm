@@ -58,6 +58,7 @@
 #include <fstream>
 #include <cstdio>
 #include <ImageMagick-7/Magick++.h>
+#include <filesystem>
 
 //#define MAGICKCORE_HDRI_ENABLE 1
 //#define MAGICKCORE_QUANTUM_DEPTH 8
@@ -141,7 +142,7 @@ projectM::projectM(Settings settings, int flags):
     projectM_resetGL(_settings.windowWidth, _settings.windowHeight);
     buffer = new int[ _settings.windowWidth * _settings.windowHeight * 3 * 4 ];
     
-    img.quality(0);
+    initWrite();
 }
 
 
@@ -326,6 +327,15 @@ void projectM::evaluateSecondPreset()
     m_activePreset2->Render(*beatDetect, pipelineContext2());
 }
 
+void projectM::initWrite()
+{
+    concat = fopen(_settings.ffconcat_filename.c_str(), "w");
+    
+    std::__fs::filesystem::create_directory("frames");
+    before = GetCurrentTime();
+    now = GetCurrentTime();
+}
+
 void projectM::writeToFile()
 {
     short width = settings().windowWidth;
@@ -333,11 +343,15 @@ void projectM::writeToFile()
     
     printf("rendered frame %d with width %d and height %d\n", count, width, height);
     
+    before = now;
+    now = GetCurrentTime();
+    
     // Write buffer to file
     std::string tga_filename = "frames/frame_" + std::to_string(count) + ".tga";
     
     // WRITING RAW BUFFER
     FILE *tga_file = fopen(tga_filename.c_str(), "w");
+    // TODO: Definitely put this in another thread
     //std::ofstream tga_file;
     //tga_file.open(tga_filename, std::ios::binary | std::ios::trunc);
     short  TGAhead[] = {0, 2, 0, 0, 0, 0, width, height, 24};
@@ -351,12 +365,16 @@ void projectM::writeToFile()
     
     fclose(tga_file);
     
-    before = now;
-    now = GetCurrentTime();
+    double diff;
+    if (now.tv_sec > before.tv_sec)
+        diff = (((now.tv_usec + 1000000.0) - before.tv_usec) / 1000000.0);
+    else
+        diff = ((now.tv_usec - before.tv_usec) / 1000000.0);
     
-    int diff = ((now.tv_usec - before.tv_usec) + 1000000) % 1000000;
+    fprintf(concat, "file %s\nduration %.5f\n", tga_filename.c_str(), diff);
+    fflush(concat);
     
-    printf("microseconds: %d\n", diff);
+    printf("microseconds: %.5f\n", diff);
     
     // Maybe later on find а better way to write compressed images
     /*
@@ -367,7 +385,7 @@ void projectM::writeToFile()
     img.write(tga_filename);
      */
     
-    printf("%d\n", count);
+    //printf("%d\n", count);
 }
 
 void projectM::renderFrame()
@@ -379,8 +397,10 @@ void projectM::renderFrame()
     
     renderFrameOnlyPass2(comboPipeline,0,0,0);
     
-    //if (_settings.wantToWrite)
-    //    projectM::writeToFile();
+    // TODO: Make copy of buffer and send to writeToFile thread
+    if (_settings.wantToWrite)
+        if (count != 0)
+            projectM::writeToFile();
     
     projectM::renderFrameEndOnSeparatePasses(comboPipeline);
 }

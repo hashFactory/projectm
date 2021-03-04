@@ -150,10 +150,10 @@ public:
         std::string ffconcat_filename;
 
         Settings() :
-            meshX(128),
-            //meshX(32),
-            //meshY(24),
-            meshY(96),
+            //meshX(128),
+            meshX(32),
+            meshY(24),
+            //meshY(96),
 
             fps(60),
             textureSize(512),
@@ -161,7 +161,7 @@ public:
             windowHeight(512),
             smoothPresetDuration(10),
             presetDuration(15),
-            hardcutEnabled(false),
+            hardcutEnabled(true),
             hardcutDuration(60),
             hardcutSensitivity(2.0),
             beatSensitivity(1.0),
@@ -187,6 +187,7 @@ public:
   void key_handler( projectMEvent event,
 		    projectMKeycode keycode, projectMModifier modifier );
     
+  void initWrite();
   void writeToFile();
 
   virtual ~projectM();
@@ -364,6 +365,8 @@ private:
     
     struct timeval before;
     struct timeval now;
+    
+    FILE *concat;
 
   void readConfig(const std::string &configFile);
   void readSettings(const Settings &settings);
