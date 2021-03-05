@@ -345,6 +345,10 @@ public:
   double getFPS();
   std::string getSettings();
   int getOutstandingFrames();
+  void displaySettings();
+  void toggleFPS();
+  void toggleRecording();
+  //void toggleStats();
 
 private:
   PCM * _pcm;

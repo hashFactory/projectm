@@ -434,8 +434,20 @@ double projectM::getFPS() {
     return 60.0;
 }
 
+void projectM::toggleFPS() {
+    //renderer->draw_fps();
+}
+
+void projectM::toggleRecording() {
+    _settings.wantToWrite = !_settings.wantToWrite;
+}
+
 int projectM::getOutstandingFrames() {
     return 1;
+}
+
+void projectM::displaySettings() {
+    printf("%s\n", getSettings().c_str());
 }
 
 std::string projectM::getSettings() {
