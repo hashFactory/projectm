@@ -116,6 +116,13 @@ public:
     std::string getActivePresetName();
     void addFakePCM();
     
+    // My functions
+    void toggleFPS();
+    void startRecording();
+    void stopRecording();
+    void toggleStats();
+    void displaySettings();
+    
     virtual void presetSwitchedEvent(bool isHardCut, size_t index) const;
 
 private:

@@ -296,6 +296,14 @@ void projectMSDL::scrollHandler(SDL_Event* sdl_evt) {
     }
 }
 
+void projectMSDL::toggleFPS() {
+    
+}
+
+void projectMSDL::displaySettings() {
+    
+}
+
 void projectMSDL::keyHandler(SDL_Event *sdl_evt) {
     projectMEvent evt;
     projectMKeycode key;
@@ -338,6 +346,9 @@ void projectMSDL::keyHandler(SDL_Event *sdl_evt) {
         {
             toggleAudioInput();
             return; // handled
+        }
+        else {
+            toggleFPS();
         }
         break;
     case SDLK_s:
