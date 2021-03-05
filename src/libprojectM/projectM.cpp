@@ -342,9 +342,11 @@ void projectM::evaluateSecondPreset()
 
 void projectM::initWrite()
 {
-    concat = fopen(_settings.ffconcat_filename.c_str(), "w");
+    folder = "recording_" + getTimeString() + "/";
+    std::__fs::filesystem::create_directory(folder);
+    concat = fopen((folder + _settings.ffconcat_filename).c_str(), "w");
     
-    std::__fs::filesystem::create_directory("frames");
+    std::__fs::filesystem::create_directory(folder + "frames");
     before = GetCurrentTime();
     now = GetCurrentTime();
     
@@ -355,7 +357,6 @@ void projectM::threadedWrite(std::string filename, short width, short height, do
 {
     // WRITING RAW BUFFER
     FILE *tga_file = fopen(filename.c_str(), "w");
-    // TODO: Definitely put this in another thread
     //std::ofstream tga_file;
     //tga_file.open(tga_filename, std::ios::binary | std::ios::trunc);
     short  TGAhead[] = {0, 2, 0, 0, 0, 0, width, height, 24};
@@ -381,9 +382,9 @@ void projectM::writeToFile()
     now = GetCurrentTime();
     
     // Write buffer to file
-    std::string tga_filename = "frames/frame_" + std::to_string(count) + ".tga";
+    std::string tga_filename = folder + "frames/frame_" + std::to_string(count) + ".tga";
     
-    int* buffer = new int[ _settings.windowWidth * _settings.windowHeight * 3 * 4 ];
+    int* buffer = new int[ _settings.windowWidth * _settings.windowHeight * 3 ];
     glReadPixels(0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, buffer);
     
     double diff = ((now.tv_usec + ((now.tv_sec > before.tv_sec) ? 1000000.0 : 0.0)) - before.tv_usec) / 1000000.0;
@@ -428,18 +429,35 @@ void projectM::renderFrame()
     projectM::renderFrameEndOnSeparatePasses(comboPipeline);
 }
 
-// TODO: implement
 double projectM::getFPS() {
-    //return renderer->fps();
-    return 60.0;
+    return renderer->realfps;
 }
 
 void projectM::toggleFPS() {
     //renderer->draw_fps();
+    renderer->showfps = !renderer->showfps;
+    printf("current fps: %.1f\n", renderer->realfps);
+}
+
+std::string projectM::getTimeString() {
+    time_t now;
+    struct tm *timeinfo;
+    char buffer[50];
+    
+    time(&now);
+    timeinfo = localtime(&now);
+    strftime(buffer, 50, "%Y-%m-%d_%H_%M_%S", timeinfo);
+    return std::string(buffer);
 }
 
 void projectM::toggleRecording() {
     _settings.wantToWrite = !_settings.wantToWrite;
+    if (_settings.wantToWrite) {
+        initWrite();
+        printf("Started recording\n");
+    }
+    else
+        printf("Stopped recording\n");
 }
 
 int projectM::getOutstandingFrames() {
@@ -1136,8 +1154,10 @@ void projectM::setPresetLock ( bool isLocked )
 {
     renderer->noSwitch = isLocked;
     if (isPresetLocked()) {
+        printf("Preset Locked");
         renderer->setToastMessage("Preset Locked");
     } else {
+        printf("Preset Unlocked");
         renderer->setToastMessage("Unlocked");
     }
 }

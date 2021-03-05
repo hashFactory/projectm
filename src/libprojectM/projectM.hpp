@@ -348,6 +348,7 @@ public:
   void displaySettings();
   void toggleFPS();
   void toggleRecording();
+  std::string getTimeString();
   //void toggleStats();
 
 private:
@@ -377,6 +378,7 @@ private:
     struct timeval now;
     
     FILE *concat;
+    std::string folder;
 
   void readConfig(const std::string &configFile);
   void readSettings(const Settings &settings);
