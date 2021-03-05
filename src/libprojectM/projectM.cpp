@@ -57,7 +57,7 @@
 // for frame saving
 #include <fstream>
 #include <cstdio>
-#include <ImageMagick-7/Magick++.h>
+//#include <ImageMagick-7/Magick++.h>
 #include <filesystem>
 
 //#define MAGICKCORE_HDRI_ENABLE 1
@@ -130,6 +130,8 @@ projectM::projectM ( std::string config_file, int flags) :
     readConfig(config_file);
     projectM_reset();
     projectM_resetGL(_settings.windowWidth, _settings.windowHeight);
+    
+    initWrite();
 }
 
 projectM::projectM(Settings settings, int flags):
@@ -166,6 +168,11 @@ bool projectM::writeConfig(const std::string & configFile, const Settings & sett
     config.add("Easter Egg Parameter", settings.easterEgg);
     config.add("Shuffle Enabled", settings.shuffleEnabled);
     config.add("Soft Cut Ratings Enabled", settings.softCutRatingsEnabled);
+    // Write custom settings
+    config.add("Want to Write", settings.wantToWrite);
+    config.add("Concat filename", settings.ffconcat_filename);
+    config.add("Default Audio Device", settings.defaultAudioDevice);
+
     std::fstream file(configFile.c_str());
     if (file) {
         file << config;
@@ -241,7 +248,13 @@ void projectM::readConfig (const std::string & configFile )
     
     // Beat Sensitivity impacts how reactive your visualizations are to volume, bass, mid-range, and treble. 
     // Preset authors have developed their visualizations with the default of 1.0.
+    //
     _settings.beatSensitivity = config.read<float> ( "Beat Sensitivity", 1.0 );
+    
+    // Read in custom settings
+    _settings.wantToWrite = config.read<bool> ( "Want to Write", false );
+    _settings.ffconcat_filename = config.read<string> ( "Concat filename", "concat.txt" );
+    _settings.defaultAudioDevice = config.read<string> ( "Default Audio Device", "Microphone" );
 
 
     projectM_init ( _settings.meshX, _settings.meshY, _settings.fps,
@@ -371,11 +384,7 @@ void projectM::writeToFile()
     int* buffer = new int[ _settings.windowWidth * _settings.windowHeight * 3 * 4 ];
     glReadPixels(0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, buffer);
     
-    double diff;
-    if (now.tv_sec > before.tv_sec)
-        diff = (((now.tv_usec + 1000000.0) - before.tv_usec) / 1000000.0);
-    else
-        diff = ((now.tv_usec - before.tv_usec) / 1000000.0);
+    double diff = ((now.tv_usec + ((now.tv_sec > before.tv_sec) ? 1000000.0 : 0.0)) - before.tv_usec) / 1000000.0;
     
     std::thread t(projectM::threadedWrite, tga_filename, width, height, diff, buffer);
     t.detach();

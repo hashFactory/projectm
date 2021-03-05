@@ -60,8 +60,6 @@
 #pragma comment(lib, "kernel32.lib")
 #endif /** WIN32 */
 
-#include <ImageMagick-7/Magick++.h>
-
 #include "dlldefs.h"
 #include "event.h"
 #include "fatal.h"
@@ -148,6 +146,7 @@ public:
         
         bool wantToWrite;
         std::string ffconcat_filename;
+        std::string defaultAudioDevice;
 
         Settings() :
             //meshX(128),
@@ -169,8 +168,9 @@ public:
             easterEgg(0.0),
             shuffleEnabled(true),
             softCutRatingsEnabled(false),
-            wantToWrite(true),
-            ffconcat_filename("concat.txt")  {}
+            wantToWrite(false),
+            ffconcat_filename("concat.txt"),
+            defaultAudioDevice("Microphone") {}
     };
 
   projectM(std::string config_file, int flags = FLAG_NONE);
@@ -189,7 +189,7 @@ public:
     
   void initWrite();
   void writeToFile();
-    static void threadedWrite(std::string filename, short width, short height, double diff, int *buff);
+  static void threadedWrite(std::string filename, short width, short height, double diff, int *buff);
 
   virtual ~projectM();
 
@@ -361,7 +361,7 @@ private:
   float fpsstart;
     
     // MY SECTION
-    Magick::Image img;
+    //Magick::Image img;
     int* buffer;
     
     struct timeval before;
