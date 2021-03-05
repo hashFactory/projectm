@@ -341,6 +341,10 @@ public:
 
   void default_key_handler(projectMEvent event, projectMKeycode keycode);
   Renderer *renderer;
+    
+  double getFPS();
+  std::string getSettings();
+  int getOutstandingFrames();
 
 private:
   PCM * _pcm;
@@ -362,6 +366,7 @@ private:
     
     // MY SECTION
     //Magick::Image img;
+    int outstandingFrames;
     int* buffer;
     
     struct timeval before;

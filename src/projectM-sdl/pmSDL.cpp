@@ -296,12 +296,13 @@ void projectMSDL::scrollHandler(SDL_Event* sdl_evt) {
     }
 }
 
+// TODO: write
 void projectMSDL::toggleFPS() {
-    
+    //drawText(projectM::getFPS().c_str(), 30, 20, 2.5);
 }
 
 void projectMSDL::displaySettings() {
-    
+    SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "%s\n", projectM::getSettings().c_str());
 }
 
 void projectMSDL::keyHandler(SDL_Event *sdl_evt) {
@@ -318,6 +319,8 @@ void projectMSDL::keyHandler(SDL_Event *sdl_evt) {
 	// handle keyboard input (for our app first, then projectM)
     switch (sdl_keycode) {
 
+    case SDLK_MINUS:
+        projectMSDL::displaySettings();
     case SDLK_q:
         if (sdl_mod & KMOD_LGUI || sdl_mod & KMOD_RGUI || sdl_mod & KMOD_LCTRL) {
             // cmd/ctrl-q = quit

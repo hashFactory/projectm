@@ -347,6 +347,8 @@ void projectM::initWrite()
     std::__fs::filesystem::create_directory("frames");
     before = GetCurrentTime();
     now = GetCurrentTime();
+    
+    outstandingFrames = 0;
 }
 
 void projectM::threadedWrite(std::string filename, short width, short height, double diff, int *buff)
@@ -416,14 +418,54 @@ void projectM::renderFrame()
     renderFrameOnlyPass2(comboPipeline,0,0,0);
     
     // TODO: Make copy of buffer and send to writeToFile thread
-    if (_settings.wantToWrite)
-        if (count != 0)
+    if (_settings.wantToWrite) {
+        if (count != 0) {
+            outstandingFrames++;
             projectM::writeToFile();
+        }
+    }
     
     projectM::renderFrameEndOnSeparatePasses(comboPipeline);
 }
 
+// TODO: implement
+double projectM::getFPS() {
+    //return renderer->fps();
+    return 60.0;
+}
 
+int projectM::getOutstandingFrames() {
+    return 1;
+}
+
+std::string projectM::getSettings() {
+    ConfigFile config = ConfigFile();
+
+    config.add("Mesh X", _settings.meshX);
+    config.add("Mesh Y", _settings.meshY);
+    config.add("Texture Size", _settings.textureSize);
+    config.add("FPS", _settings.fps);
+    config.add("Window Width", _settings.windowWidth);
+    config.add("Window Height", _settings.windowHeight);
+    config.add("Smooth Preset Duration", _settings.smoothPresetDuration);
+    config.add("Preset Duration", _settings.presetDuration);
+    config.add("Preset Path", _settings.presetURL);
+    config.add("Title Font", _settings.titleFontURL);
+    config.add("Menu Font", _settings.menuFontURL);
+    config.add("Hard Cut Sensitivity", _settings.beatSensitivity);
+    config.add("Aspect Correction", _settings.aspectCorrection);
+    config.add("Easter Egg Parameter", _settings.easterEgg);
+    config.add("Shuffle Enabled", _settings.shuffleEnabled);
+    config.add("Soft Cut Ratings Enabled", _settings.softCutRatingsEnabled);
+    // Write custom settings
+    config.add("Want to Write", _settings.wantToWrite);
+    config.add("Concat filename", _settings.ffconcat_filename);
+    config.add("Default Audio Device", _settings.defaultAudioDevice);
+    
+    std::stringstream ss;
+    ss << config;
+    return ss.str();
+}
 
 Pipeline * projectM::renderFrameOnlyPass1(Pipeline *pPipeline) /*pPipeline is a pointer to a Pipeline for use in pass 2. returns the pointer if it was used, else returns NULL */
 {
