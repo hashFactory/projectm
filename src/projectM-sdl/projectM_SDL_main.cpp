@@ -76,8 +76,9 @@ std::string getConfigFilePath(std::string datadir_path) {
     
   // Use config from local directory
   projectM_home = std::string(home);
-    /*
-  projectM_home += "/.projectM";
+  projectM_config = std::string(home);
+    
+  //projectM_home += "/.projectM";
   
   // Create the ~/.projectM directory. If it already exists, mkdir will do nothing
 #if defined _MSC_VER
@@ -85,8 +86,7 @@ std::string getConfigFilePath(std::string datadir_path) {
 #else
   mkdir(projectM_home.c_str(), 0755);
 #endif
-     */
-  
+     
   projectM_home += "/config.inp";
   projectM_config += "/config.inp";
   
@@ -581,11 +581,11 @@ modKey = "CMD";
 	if (!app->wasapi) // not currently using WASAPI, so we need to endAudioCapture.
 		app->endAudioCapture();
 #endif
-
+    /*
     // Write back config with current app settings (if we loaded from a config file to begin with)
     if (!configFilePath.empty()) {
         projectM::writeConfig(configFilePath, app->settings());
-    }
+    }*/
     delete app;
 
     return PROJECTM_SUCCESS;
