@@ -71,10 +71,12 @@ std::string getConfigFilePath(std::string datadir_path) {
 #ifdef _MSC_VER
   home=getenv("USERPROFILE");
 #else
-  home=getenv("HOME");
+  home=getenv("PWD");
 #endif
     
+  // Use config from local directory
   projectM_home = std::string(home);
+    /*
   projectM_home += "/.projectM";
   
   // Create the ~/.projectM directory. If it already exists, mkdir will do nothing
@@ -83,6 +85,7 @@ std::string getConfigFilePath(std::string datadir_path) {
 #else
   mkdir(projectM_home.c_str(), 0755);
 #endif
+     */
   
   projectM_home += "/config.inp";
   projectM_config += "/config.inp";
@@ -309,7 +312,7 @@ srand((int)(time(NULL)));
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
 #endif
-
+    
     
     SDL_Window *win = SDL_CreateWindow("projectM", 0, 0, width, height, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
     
@@ -380,12 +383,12 @@ srand((int)(time(NULL)));
         settings.windowWidth = width;
         settings.windowHeight = height;
         
-        settings.meshX = 128;
+        settings.meshX = 64;
         settings.meshY = settings.meshX * heightWidthRatio;
 		settings.fps = maxRefreshRate;
         settings.smoothPresetDuration = 3; // seconds
         settings.presetDuration = 22; // seconds
-		settings.hardcutEnabled = true;
+		settings.hardcutEnabled = false;
 		settings.hardcutDuration = 60;
 		settings.hardcutSensitivity = 1.0;
         settings.beatSensitivity = 1.0;

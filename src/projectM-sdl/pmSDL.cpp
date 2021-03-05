@@ -91,6 +91,7 @@ int projectMSDL::toggleAudioInput() {
                 return 1;
             }
             // If WASAPI_LOOPBACK is not enabled and we have multiple input devices, return to device index 0 and let's listen to that device.
+            
             selectedAudioDevice = CurAudioDevice;
             initAudioInput();
             this->beginAudioCapture();
@@ -166,14 +167,23 @@ int projectMSDL::openAudioInput() {
     }
 #ifdef DEBUG
     for (unsigned int i = 0; i < NumAudioDevices; i++) {
-        SDL_Log("Found audio capture device %d: %s", i, SDL_GetAudioDeviceName(i, true));
+        SDL_Log("Identified audio capture device %d: %s", i, SDL_GetAudioDeviceName(i, true));
     }
 #endif
+    // Search for the requested audio device if one was specified
+    for (unsigned int i = 0; i < NumAudioDevices; i++) {
+        std::string name = SDL_GetAudioDeviceName(i, true);
+        if (name.find(settings().defaultAudioDevice) != std::string::npos) {
+            SDL_Log("You requested \"%s\" and we found device %d: %s", settings().defaultAudioDevice.c_str(), i, SDL_GetAudioDeviceName(i, true));
+            selectedAudioDevice = i;
+            initAudioInput();
+            return 1;
+        }
+    }
 
     // default selected Audio Device to 0.
     selectedAudioDevice = 0;
     initAudioInput();
-
     return 1;
 }
 
