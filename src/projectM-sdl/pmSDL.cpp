@@ -312,8 +312,10 @@ void projectMSDL::keyHandler(SDL_Event *sdl_evt) {
 
     case SDLK_0:
         projectM::toggleRecording();
+        break;
     case SDLK_MINUS:
         projectM::displaySettings();
+        break;
     case SDLK_q:
         if (sdl_mod & KMOD_LGUI || sdl_mod & KMOD_RGUI || sdl_mod & KMOD_LCTRL) {
             // cmd/ctrl-q = quit

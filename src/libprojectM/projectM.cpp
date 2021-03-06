@@ -59,6 +59,7 @@
 #include <cstdio>
 //#include <ImageMagick-7/Magick++.h>
 #include <filesystem>
+namespace fs = std::filesystem;
 
 //#define MAGICKCORE_HDRI_ENABLE 1
 //#define MAGICKCORE_QUANTUM_DEPTH 8
@@ -130,8 +131,6 @@ projectM::projectM ( std::string config_file, int flags) :
     readConfig(config_file);
     projectM_reset();
     projectM_resetGL(_settings.windowWidth, _settings.windowHeight);
-    
-    initWrite();
 }
 
 projectM::projectM(Settings settings, int flags):
@@ -143,8 +142,6 @@ projectM::projectM(Settings settings, int flags):
     _settings.windowWidth = 640;
     _settings.windowHeight = 360;
     projectM_resetGL(_settings.windowWidth, _settings.windowHeight);
-    
-    initWrite();
 }
 
 
@@ -342,11 +339,22 @@ void projectM::evaluateSecondPreset()
 
 void projectM::initWrite()
 {
+    // create recording folder
     folder = "recording_" + getTimeString() + "/";
-    std::__fs::filesystem::create_directory(folder);
+    fs::create_directory(folder);
+    
+    // create concat file
     concat = fopen((folder + _settings.ffconcat_filename).c_str(), "w");
     
-    std::__fs::filesystem::create_directory(folder + "frames");
+    // create ffmpeg script
+    std::ofstream encode(folder + "encode.command");
+    encode << "#!/bin/zsh\ncd " << getenv("PWD") << "/" << folder << "\nffmpeg -f concat -safe 0 -i concat.txt -y -c:v libx264 -movflags faststart -vf fps=60 -preset medium -pix_fmt yuv420p -b:v 40M out.mp4\n";
+    encode.flush();
+    encode.close();
+    fs::permissions(folder + "encode.command", fs::perms::owner_all | fs::perms::group_all, fs::perm_options::add);
+
+    // create frames folder
+    fs::create_directory(folder + "frames");
     before = GetCurrentTime();
     now = GetCurrentTime();
     
@@ -376,7 +384,7 @@ void projectM::writeToFile()
     short width = settings().windowWidth;
     short height = settings().windowHeight;
     
-    printf("rendered frame %d with width %d and height %d\n", count, width, height);
+    //printf("rendered frame %d with width %d and height %d\n", count, width, height);
     
     before = now;
     now = GetCurrentTime();
@@ -396,7 +404,7 @@ void projectM::writeToFile()
     fprintf(concat, "file %s\nduration %.5f\n", tga_filename.c_str(), diff);
     fflush(concat);
     
-    printf("microseconds: %.5f\n", diff);
+    //printf("microseconds: %.5f\n", diff);
 }
 
 void projectM::renderFrame()
@@ -447,8 +455,10 @@ void projectM::toggleRecording() {
         initWrite();
         printf("Started recording\n");
     }
-    else
+    else {
+        fclose(concat);
         printf("Stopped recording\n");
+    }
 }
 
 // TODO: Will return how many frames still aren't written yet

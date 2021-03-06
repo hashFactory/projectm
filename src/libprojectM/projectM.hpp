@@ -342,6 +342,7 @@ public:
   void default_key_handler(projectMEvent event, projectMKeycode keycode);
   Renderer *renderer;
     
+  // TODO: Implement audio, .milk specification, .milk reloading
   double getFPS();
   std::string getSettings();
   int getOutstandingFrames();
