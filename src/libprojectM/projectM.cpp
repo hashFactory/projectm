@@ -353,7 +353,7 @@ void projectM::initWrite()
     outstandingFrames = 0;
 }
 
-void projectM::threadedWrite(std::string filename, short width, short height, double diff, int *buff)
+void projectM::threadedWrite(std::string filename, short width, short height, double diff, char *buff)
 {
     // WRITING RAW BUFFER
     FILE *tga_file = fopen(filename.c_str(), "w");
@@ -381,32 +381,22 @@ void projectM::writeToFile()
     before = now;
     now = GetCurrentTime();
     
-    // Write buffer to file
-    std::string tga_filename = folder + "frames/frame_" + std::to_string(count) + ".tga";
+    // Write image buffer to file
+    std::string tga_filename = "frames/frame_" + std::to_string(count) + ".tga";
     
-    int* buffer = new int[ _settings.windowWidth * _settings.windowHeight * 3 ];
+    char* buffer = new char[ _settings.windowWidth * _settings.windowHeight * 3 ];
     glReadPixels(0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, buffer);
     
     double diff = ((now.tv_usec + ((now.tv_sec > before.tv_sec) ? 1000000.0 : 0.0)) - before.tv_usec) / 1000000.0;
     
-    std::thread t(projectM::threadedWrite, tga_filename, width, height, diff, buffer);
+    std::thread t(projectM::threadedWrite, folder + tga_filename, width, height, diff, buffer);
     t.detach();
     
+    // Write duration info to concat file
     fprintf(concat, "file %s\nduration %.5f\n", tga_filename.c_str(), diff);
     fflush(concat);
     
     printf("microseconds: %.5f\n", diff);
-    
-    // Maybe later on find а better way to write compressed images
-    /*
-    glReadPixels(0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, buffer);
-    
-    img.read(width, height, "RGB", Magick::CharPixel, buffer);
-    img.quality(0);
-    img.write(tga_filename);
-     */
-    
-    //printf("%d\n", count);
 }
 
 void projectM::renderFrame()
@@ -418,7 +408,6 @@ void projectM::renderFrame()
     
     renderFrameOnlyPass2(comboPipeline,0,0,0);
     
-    // TODO: Make copy of buffer and send to writeToFile thread
     if (_settings.wantToWrite) {
         if (count != 0) {
             outstandingFrames++;
@@ -439,6 +428,7 @@ void projectM::toggleFPS() {
     printf("current fps: %.1f\n", renderer->realfps);
 }
 
+// Create string representing now to use as folder name
 std::string projectM::getTimeString() {
     time_t now;
     struct tm *timeinfo;
@@ -450,6 +440,7 @@ std::string projectM::getTimeString() {
     return std::string(buffer);
 }
 
+// Turn recording on/off
 void projectM::toggleRecording() {
     _settings.wantToWrite = !_settings.wantToWrite;
     if (_settings.wantToWrite) {
@@ -460,14 +451,17 @@ void projectM::toggleRecording() {
         printf("Stopped recording\n");
 }
 
+// TODO: Will return how many frames still aren't written yet
 int projectM::getOutstandingFrames() {
     return 1;
 }
 
+// Display all settings
 void projectM::displaySettings() {
     printf("%s\n", getSettings().c_str());
 }
 
+// Generate string of all settings
 std::string projectM::getSettings() {
     ConfigFile config = ConfigFile();
 
@@ -494,6 +488,11 @@ std::string projectM::getSettings() {
     
     std::stringstream ss;
     ss << config;
+    
+    // Also add info like size / frame
+    double framesize = (_settings.windowWidth * _settings.windowHeight * 3.0) / 1000.0;
+    double bitrate = framesize * _settings.fps;
+    ss << "Recording will use ~" << bitrate << "KB/s at " << framesize << "KB / frame\n";
     return ss.str();
 }
 
@@ -612,10 +611,6 @@ Pipeline * projectM::renderFrameOnlyPass1(Pipeline *pPipeline) /*pPipeline is a 
 
 }
 
-
-
-
-
 /* eye is 0,or 1, or who knows?*/
 void projectM::renderFrameOnlyPass2(Pipeline *pPipeline,int xoffset,int yoffset,int eye) /*pPipeline can be null if we re not in transition */
 {
@@ -635,25 +630,14 @@ void projectM::renderFrameOnlyPass2(Pipeline *pPipeline,int xoffset,int yoffset,
         //	 printf("start thread\n");
         assert ( m_activePreset2.get() );
 
-
         /* was other stuff */
-	
         renderer->RenderFrameOnlyPass2(*pPipeline, pipelineContext(),xoffset,yoffset,eye);
-
     }
     else
     {
-
-
         renderer->RenderFrameOnlyPass2 (m_activePreset->pipeline(), pipelineContext(),xoffset,yoffset,eye);
-
-
     }
-
 }
-
-
-
 
 void projectM::renderFrameEndOnSeparatePasses(Pipeline *pPipeline) {
 
