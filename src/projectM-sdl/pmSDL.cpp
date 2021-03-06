@@ -455,6 +455,7 @@ void projectMSDL::addFakePCM() {
 void projectMSDL::resize(unsigned int width_, unsigned int height_) {
     width = width_;
     height = height_;
+    printf("Resized window to %dx%d\n", width, height);
     projectM_resetGL(width, height);
 }
 
