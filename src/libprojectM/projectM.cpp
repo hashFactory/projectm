@@ -340,7 +340,8 @@ void projectM::evaluateSecondPreset()
 void projectM::initWrite()
 {
     // create recording folder
-    folder = "recording_" + getTimeString() + "/";
+    std::string time_string = getTimeString();
+    folder = "recording_" + time_string + "/";
     fs::create_directory(folder);
     
     // create concat file
@@ -348,7 +349,7 @@ void projectM::initWrite()
     
     // create ffmpeg script
     std::ofstream encode(folder + "encode.command");
-    encode << "#!/bin/zsh\ncd " << getenv("PWD") << "/" << folder << "\nffmpeg -f concat -safe 0 -i concat.txt -y -c:v libx264 -movflags faststart -vf fps=60 -preset medium -pix_fmt yuv420p -b:v 40M out.mp4\n";
+    encode << "#!/bin/zsh\ncd " << getenv("PWD") << "/" << folder << "\nffmpeg -f concat -safe 0 -i concat.txt -y -c:v libx264 -movflags faststart -vf fps=60 -preset medium -pix_fmt yuv420p -b:v 50M " << time_string << ".mp4\n";
     encode.flush();
     encode.close();
     fs::permissions(folder + "encode.command", fs::perms::owner_all | fs::perms::group_all, fs::perm_options::add);
