@@ -366,10 +366,7 @@ void projectM::threadedWrite(std::string filename, short width, short height, do
 {
     // WRITING RAW BUFFER
     FILE *tga_file = fopen(filename.c_str(), "w");
-    //std::ofstream tga_file;
-    //tga_file.open(tga_filename, std::ios::binary | std::ios::trunc);
     short  TGAhead[] = {0, 2, 0, 0, 0, 0, width, height, 24};
-    //tga_file.write((char*)TGAhead, sizeof(short) * 9);
     fwrite(&TGAhead, sizeof(TGAhead), 1, tga_file);
     
     fwrite(buff, width * height * 3, 1, tga_file);
