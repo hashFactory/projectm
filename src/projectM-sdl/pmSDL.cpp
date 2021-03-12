@@ -316,6 +316,9 @@ void projectMSDL::keyHandler(SDL_Event *sdl_evt) {
     case SDLK_MINUS:
         projectM::displaySettings();
         break;
+    case SDLK_1:
+        projectM::reloadPreset();
+        break;
     case SDLK_q:
         if (sdl_mod & KMOD_LGUI || sdl_mod & KMOD_RGUI || sdl_mod & KMOD_LCTRL) {
             // cmd/ctrl-q = quit
@@ -394,13 +397,13 @@ void projectMSDL::keyHandler(SDL_Event *sdl_evt) {
         // selectNext(true);
         break;
     case SDLK_UP:
+        projectM::changeBeatSensitivity(true);
         break;
     case SDLK_DOWN:
+        projectM::changeBeatSensitivity(false);
         break;
-
     case SDLK_F3:
         break;
-
 
     case SDLK_SPACE:
         if (!projectM::isTextInputActive(true))
@@ -482,6 +485,10 @@ void projectMSDL::pollEvent() {
 					case SDL_WINDOWEVENT_SIZE_CHANGED:
                         resize(w, h);
 						break;
+                    // By default leave off
+                    case SDL_WINDOWEVENT_ENTER:
+                        //projectM::reloadPreset();
+                        break;
                 }
                 break;
             case SDL_MOUSEWHEEL:

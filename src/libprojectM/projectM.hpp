@@ -343,6 +343,7 @@ public:
   Renderer *renderer;
     
   // TODO: Implement audio, .milk specification, .milk reloading
+  // TODO: Display recording stats on window
   double getFPS();
   std::string getSettings();
   int getOutstandingFrames();
@@ -350,6 +351,8 @@ public:
   void toggleFPS();
   void toggleRecording();
   std::string getTimeString();
+  void changeBeatSensitivity(bool up);
+  void reloadPreset();
   //void toggleStats();
 
 private:

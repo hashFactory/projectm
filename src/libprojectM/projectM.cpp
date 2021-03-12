@@ -179,7 +179,6 @@ bool projectM::writeConfig(const std::string & configFile, const Settings & sett
 }
 
 
-// TODO: add config read/write support for wantToWrite
 void projectM::readConfig (const std::string & configFile )
 {
     std::cout << "[projectM] config file: " << configFile << std::endl;
@@ -341,7 +340,8 @@ void projectM::initWrite()
 {
     // create recording folder
     std::string time_string = getTimeString();
-    folder = "recording_" + time_string + "/";
+    //folder = "recording_" + time_string + "/";
+    folder = "recordings/recording_" + time_string + "/";
     fs::create_directory(folder);
     
     // create concat file
@@ -349,7 +349,7 @@ void projectM::initWrite()
     
     // create ffmpeg script
     std::ofstream encode(folder + "encode.command");
-    encode << "#!/bin/zsh\ncd " << getenv("PWD") << "/" << folder << "\nffmpeg -f concat -safe 0 -i concat.txt -y -c:v libx264 -movflags faststart -vf fps=60 -preset medium -pix_fmt yuv420p -b:v 50M " << time_string << ".mp4\n";
+    encode << "#!/bin/zsh\ncd " << getenv("PWD") << "/" << folder << "\nffmpeg -f concat -safe 0 -i concat.txt -y -c:v libx264 -movflags faststart -preset slow -pix_fmt yuv420p -b:v 200M -r 60 " << time_string << ".mp4\n";
     encode.flush();
     encode.close();
     fs::permissions(folder + "encode.command", fs::perms::owner_all | fs::perms::group_all, fs::perm_options::add);
@@ -374,7 +374,7 @@ void projectM::threadedWrite(std::string filename, short width, short height, do
     
     fwrite(buff, width * height * 3, 1, tga_file);
     
-    printf("wrote to %s\n", filename.c_str());
+    printf("wrote to %s with diff %.5f\n", filename.c_str(), diff);
     
     fclose(tga_file);
     free(buff);
@@ -460,6 +460,20 @@ void projectM::toggleRecording() {
         fclose(concat);
         printf("Stopped recording\n");
     }
+}
+
+void projectM::reloadPreset() {
+    m_presetLoader->clear();
+    m_presetLoader->rescan();
+    //renderer->setPresetName("");
+    //printf("preset id %d\n", presetID);
+    selectPreset(0, true);
+    printf("Reloaded preset\n");
+}
+
+void projectM::changeBeatSensitivity(bool up) {
+    _settings.beatSensitivity += up ? 0.05 : -0.05;
+    printf("Changed beat sensitivity to %.2f\n", _settings.beatSensitivity);
 }
 
 // TODO: Will return how many frames still aren't written yet
