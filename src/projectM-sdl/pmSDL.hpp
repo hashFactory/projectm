@@ -84,6 +84,19 @@
 #endif /** WIN32 */
     #endif
 #endif
+/*
+class midiHandler {
+public:
+    
+    int miditest(int argc);
+    //static projectMSDL *pm2;
+    static void selectNextStatic(projectMSDL &pm3, bool hardCut);
+    static void MyReadProc(const MIDIPacketList *pktlist, void *refCon, void *connRefCon);
+    static std::shared_ptr<projectMSDL> ptr;
+    
+    MIDIPortRef     gOutPort = NULL;
+    MIDIEndpointRef gDest = NULL;
+}*/
 
 class projectMSDL : public projectM {
 public:

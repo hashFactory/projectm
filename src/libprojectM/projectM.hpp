@@ -82,6 +82,9 @@ class MasterRenderItemMerge;
 
 #include "Common.hpp"
 
+#include <CoreMIDI/MIDIServices.h>
+#include <CoreFoundation/CFRunLoop.h>
+
 #include <memory>
 #ifdef WIN32
 #pragma warning (disable:4244)

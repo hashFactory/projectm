@@ -61,6 +61,12 @@
 #include <filesystem>
 namespace fs = std::filesystem;
 
+#include "RtMidi.h"
+#include <map>
+
+#include <CoreMIDI/MIDIServices.h>
+#include <CoreFoundation/CFRunLoop.h>
+
 //#define MAGICKCORE_HDRI_ENABLE 1
 //#define MAGICKCORE_QUANTUM_DEPTH 8
 
@@ -82,6 +88,14 @@ namespace {
 constexpr int kMaxSwitchRetries = 10;
 }
 
+//static projectM *pm;
+//static projectM *pm2;
+/*
+static void selectNextStatic(ProjectM *pm, bool hardCut) {
+    (projectM::pm)->selectNext(true);
+    printf("Selected next\n");
+}
+*/
 projectM::~projectM()
 {
 #ifdef USE_THREADS
@@ -131,6 +145,7 @@ projectM::projectM ( std::string config_file, int flags) :
     readConfig(config_file);
     projectM_reset();
     projectM_resetGL(_settings.windowWidth, _settings.windowHeight);
+    //pm = this;
 }
 
 projectM::projectM(Settings settings, int flags):
@@ -142,6 +157,7 @@ projectM::projectM(Settings settings, int flags):
     _settings.windowWidth = 640;
     _settings.windowHeight = 360;
     projectM_resetGL(_settings.windowWidth, _settings.windowHeight);
+    //pm = this;
 }
 
 
@@ -855,6 +871,8 @@ void projectM::projectM_init ( int gx, int gy, int fps, int texsize, int width, 
 
     pipelineContext().fps = fps;
     pipelineContext2().fps = fps;
+    
+    initMidi();
 
 }
 

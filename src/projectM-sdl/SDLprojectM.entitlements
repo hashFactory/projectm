@@ -10,5 +10,7 @@
 	<true/>
     <key>com.apple.security.device.microphone</key>
     <true/>
+    <key>com.apple.security.device.midi-input</key>
+	<true/>
 </dict>
 </plist>
