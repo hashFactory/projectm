@@ -352,7 +352,21 @@ public:
   void toggleRecording();
   std::string getTimeString();
   void changeBeatSensitivity(bool up);
-  void reloadPreset();
+  void reloadPreset(bool forceReload);
+  void loadNextSlow();
+  void initMidi();
+
+    void toggleReload();
+    void displayHelp();
+    
+    //int miditest(int argc);
+    void loadMidi();
+    
+    void log(char *value);
+    void log(std::string value);
+    
+   static void selectNextStatic(bool hardCut);
+    
   //void toggleStats();
 
 private:
@@ -383,6 +397,8 @@ private:
     
     FILE *concat;
     std::string folder;
+    
+    bool shouldReload = false;
 
   void readConfig(const std::string &configFile);
   void readSettings(const Settings &settings);

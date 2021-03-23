@@ -431,7 +431,9 @@ double projectM::getFPS() {
 void projectM::toggleFPS() {
     //renderer->draw_fps();
     renderer->showfps = !renderer->showfps;
-    printf("current fps: %.1f\n", renderer->realfps);
+    char buf[40];
+    sprintf(buf, "current fps: %.1f\n", renderer->realfps);
+    log(buf);
 }
 
 // Create string representing now to use as folder name
@@ -451,26 +453,115 @@ void projectM::toggleRecording() {
     _settings.wantToWrite = !_settings.wantToWrite;
     if (_settings.wantToWrite) {
         initWrite();
-        printf("Started recording\n");
+        log("Started recording\n");
     }
     else {
         fclose(concat);
-        printf("Stopped recording\n");
+        log("Stopped recording\n");
     }
 }
 
-void projectM::reloadPreset() {
-    m_presetLoader->clear();
-    m_presetLoader->rescan();
-    //renderer->setPresetName("");
-    //printf("preset id %d\n", presetID);
-    selectPreset(0, true);
-    printf("Reloaded preset\n");
+void projectM::displayHelp() {
+    log("Tristan's help menu:\n"
+           " 1:\tforce reload current preset\n"
+           " 2:\ttoggle automatic preset reloading\n"
+           " 5:\tslow transition to next preset\n"
+           " 6:\tload midi devices (WIP)\n"
+           " 8:\tdisplay current fps\n"
+           " 9:\tdisplay settings\n"
+           " 0:\ttoggle recording\n"
+           " UP:\tup beat sensitivity\n"
+           " DOWN:\tdown beat sensitivity\n"
+           " H:\tshow this help menu\n");
+}
+
+void projectM::toggleReload() {
+    shouldReload = !shouldReload;
+    log(shouldReload ? "Activated automatic reloading\n" : "Disabled automatic reloading\n");
+}
+
+void projectM::log(std::string value) {
+    printf("\033[1m%s\033[0m", value.c_str());
+}
+
+void projectM::log(char *value) {
+    printf("\033[1m%s\033[0m", value);
+}
+
+void projectM::reloadPreset(bool forceReload) {
+    //printf("preset id %d\n", projectM::presetID);
+    //m_presetLoader->clear();
+    //m_presetLoader->rescan();
+    if (shouldReload || forceReload) {
+        projectM::selectNext(true);
+        projectM::selectPrevious(true);
+        
+        //renderer->setPresetName("");
+        //selectPreset(0, true);
+        log("Reloaded preset\n");
+    }
+    else {
+        //printf("Info: press 2 to toggle automatic reloading\n");
+    }
+    //miditest(2);
+}
+
+void projectM::loadNextSlow() {
+    projectM::_settings.smoothPresetDuration = 20;
+    projectM::selectNext(false);
+    log("Transitioning to next preset\n");
+}
+
+void projectM::loadMidi() {
+    //miditest(2);
+    log("Loaded Midi\n");
+}
+
+void projectM::initMidi() {
+    // Create an api map.
+      std::map<int, std::string> apiMap;
+      apiMap[RtMidi::MACOSX_CORE] = "OS-X CoreMidi";
+      apiMap[RtMidi::WINDOWS_MM] = "Windows MultiMedia";
+      apiMap[RtMidi::UNIX_JACK] = "Jack Client";
+      apiMap[RtMidi::LINUX_ALSA] = "Linux ALSA";
+      apiMap[RtMidi::RTMIDI_DUMMY] = "RtMidi Dummy";
+     
+      std::vector< RtMidi::Api > apis;
+      RtMidi :: getCompiledApi( apis );
+     
+      std::cout << "\nCompiled APIs:\n";
+      for ( unsigned int i=0; i<apis.size(); i++ )
+        std::cout << "  " << apiMap[ apis[i] ] << std::endl;
+     
+    /*
+    RtMidiIn *midiin = 0;
+    
+    try {
+        //midiin = new RtMidiIn(RtMidi::UNIX_JACK);
+    }
+    catch (RtMidiError &error) {
+          error.printMessage();
+    }
+    int nPorts = midiin->getPortCount();
+    std::cout << "\nThere are " << nPorts << " MIDI input sources available.\n";
+    std::string portName;
+    for (int i = 0; i < nPorts; i++) {
+        try {
+            portName = midiin->getPortName(i);
+        }
+        catch ( RtMidiError &error ) {
+            error.printMessage();
+            delete midiin;
+        }
+        std::cout << "  Input Port #" << i+1 << ": " << portName << '\n';
+      }*/
 }
 
 void projectM::changeBeatSensitivity(bool up) {
     _settings.beatSensitivity += up ? 0.05 : -0.05;
-    printf("Changed beat sensitivity to %.2f\n", _settings.beatSensitivity);
+    char buf[60];
+    sprintf(buf, "Changed beat sensitivity to %.2f\n", _settings.beatSensitivity);
+    log(buf);
 }
 
 // TODO: Will return how many frames still aren't written yet
@@ -480,7 +571,9 @@ int projectM::getOutstandingFrames() {
 
 // Display all settings
 void projectM::displaySettings() {
-    printf("%s\n", getSettings().c_str());
+    char buf[600];
+    sprintf(buf, "%s\n", getSettings().c_str());
+    log(buf);
 }
 
 // Generate string of all settings

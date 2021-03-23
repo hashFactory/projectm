@@ -45,6 +45,8 @@
 #include <iostream>
 #include <sys/stat.h>
 
+#include <memory>
+
 
 #ifdef WASAPI_LOOPBACK
 #include <stdio.h>

@@ -310,14 +310,29 @@ void projectMSDL::keyHandler(SDL_Event *sdl_evt) {
 	// handle keyboard input (for our app first, then projectM)
     switch (sdl_keycode) {
 
+    case SDLK_1:
+        projectM::reloadPreset(true);
+        break;
+    case SDLK_2:
+        projectM::toggleReload();
+        break;
+    case SDLK_5:
+        projectM::loadNextSlow();
+        break;
+    case SDLK_6:
+        projectM::loadMidi();
+        break;
+    case SDLK_8:
+        projectM::toggleFPS();
+        break;
+    case SDLK_9:
+        projectM::displaySettings();
+        break;
     case SDLK_0:
         projectM::toggleRecording();
         break;
-    case SDLK_MINUS:
-        projectM::displaySettings();
-        break;
-    case SDLK_1:
-        projectM::reloadPreset();
+    case SDLK_h:
+        projectM::displayHelp();
         break;
     case SDLK_q:
         if (sdl_mod & KMOD_LGUI || sdl_mod & KMOD_RGUI || sdl_mod & KMOD_LCTRL) {
@@ -349,7 +364,7 @@ void projectMSDL::keyHandler(SDL_Event *sdl_evt) {
             return; // handled
         }
         else {
-            projectM::toggleFPS();
+            //projectM::toggleFPS();
         }
         break;
     case SDLK_s:
@@ -487,7 +502,7 @@ void projectMSDL::pollEvent() {
 						break;
                     // By default leave off
                     case SDL_WINDOWEVENT_ENTER:
-                        //projectM::reloadPreset();
+                        projectM::reloadPreset(false);
                         break;
                 }
                 break;
@@ -600,6 +615,7 @@ projectMSDL::projectMSDL(Settings settings, int flags) : projectM(settings, flag
     height = getWindowHeight();
     done = 0;
     isFullScreen = false;
+    //projectMSDL::miditest(2);
 }
 
 projectMSDL::projectMSDL(std::string config_file, int flags) : projectM(config_file, flags) {
@@ -607,6 +623,7 @@ projectMSDL::projectMSDL(std::string config_file, int flags) : projectM(config_f
     height = getWindowHeight();
     done = 0;
     isFullScreen = false;
+    //projectMSDL::miditest(2);
 }
 
 void projectMSDL::init(SDL_Window *window, SDL_GLContext *_glCtx, const bool _renderToTexture) {
