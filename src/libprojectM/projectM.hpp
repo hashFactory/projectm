@@ -191,6 +191,7 @@ public:
 		    projectMKeycode keycode, projectMModifier modifier );
     
   void initWrite();
+  void initServer();
   void writeToFile();
   static void threadedWrite(std::string filename, short width, short height, double diff, char *buff);
 

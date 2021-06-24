@@ -19,6 +19,7 @@
 *
 */
 
+#include "projectM-opengl.h"
 #include "RenderItemMatcher.hpp"
 #include "RenderItemMergeFunction.hpp"
 #include "fatal.h"
@@ -79,6 +80,7 @@ namespace fs = std::filesystem;
 pthread_t thread;
 BackgroundWorkerSync worker_sync;
 
+
 #ifdef SYNC_PRESET_SWITCHES
 pthread_mutex_t preset_mutex;
 #endif
@@ -136,7 +138,6 @@ void projectM::projectM_resetTextures()
 {
     renderer->ResetTextures();
 }
-
 
 projectM::projectM ( std::string config_file, int flags) :
         renderer ( 0 ), _pcm(0), beatDetect ( 0 ), _pipelineContext(new PipelineContext()), _pipelineContext2(new PipelineContext()), m_presetPos(0),
@@ -357,6 +358,7 @@ void projectM::initWrite()
     // create recording folder
     std::string time_string = getTimeString();
     //folder = "recording_" + time_string + "/";
+    fs::create_directory("recordings");
     folder = "recordings/recording_" + time_string + "/";
     fs::create_directory(folder);
     
