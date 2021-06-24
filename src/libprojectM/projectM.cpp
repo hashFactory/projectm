@@ -587,6 +587,15 @@ int projectM::getOutstandingFrames() {
     return 1;
 }
 
+void projectM::setFPS(int fps) {
+    _settings.fps = fps;
+    log("Updated fps\n");
+}
+
+std::string projectM::getCurrentPreset() {
+    return this->m_activePreset->name();
+}
+
 // Display all settings
 void projectM::displaySettings() {
     char buf[600];

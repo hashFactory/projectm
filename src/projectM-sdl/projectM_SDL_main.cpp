@@ -274,10 +274,13 @@ int request_target_is(struct http_request_s* request, char const * target) {
 
 #define RESPONSE "Hello, World!"
 void handle_request(struct http_request_s* request) {
+    
     struct http_response_s* response = http_response_init();
+    std::string s_response(RESPONSE);
+    unsigned long size_response = sizeof(RESPONSE);
     
     if (request->stream.buf) {
-        std::cout << request->stream.buf << "\n";
+        //std::cout << request->stream.buf << "\n";
         
         if (request->stream.buf[5] == 'n') {
             pm->selectNext(true);
@@ -285,11 +288,53 @@ void handle_request(struct http_request_s* request) {
         if (request->stream.buf[5] == 'p') {
             pm->selectPrevious(true);
         }
+        if (request->stream.buf[5] == 'r') {
+            // get the current preset
+            std::string presetName = pm->getCurrentPreset();
+            unsigned int index = pm->getSearchIndex(presetName);
+            std::string url_preset = pm->getPresetURL(index);
+            
+            // read in file and save to response
+            std::ifstream f_preset(url_preset);
+            if (!f_preset.is_open()) {
+                std::cout << "Could not find preset: %s\n" << presetName << "\n";
+            } else {
+                s_response = std::string((std::istreambuf_iterator<char>(f_preset)), std::istreambuf_iterator<char>());
+                size_response = s_response.size();
+            }
+        }
+        if (request->stream.buf[5] == 's') {
+            std::string s_request(http_request_body(request).buf);
+            std::cout << "set request\n";
+            std::cout << s_request;
+            std::string time_string = pm->getTimeString();
+            std::string filename = "" + time_string + ".milk";
+            if (s_request.size() > 0) {
+                // assume we have a valid file
+                std::ofstream output_preset;
+                output_preset.open(filename, std::ios::out);
+                if (output_preset.is_open()) {
+                    output_preset << s_request;
+                    output_preset.close();
+                    
+                    std::cout << "\n\n" << TOTAL_RATING_TYPES << "\n\n";
+                    std::vector<int> ratings(2);
+                    
+                    unsigned int new_index = pm->addPresetURL(filename, time_string, ratings);
+                    std::cout << "Added " << filename << " at index: " << new_index << "\n";
+                    pm->selectPreset(new_index);
+                    if (!pm->isPresetLocked())
+                        pm->setPresetLock(true);
+                    //pm->selectNext(true);
+                }
+            }
+        }
+
     }
     
     http_response_status(response, 200);
     http_response_header(response, "Content-Type", "text/plain");
-    http_response_body(response, RESPONSE, sizeof(RESPONSE) - 1);
+    http_response_body(response, s_response.c_str(), size_response);
     http_respond(request, response);
 }
 

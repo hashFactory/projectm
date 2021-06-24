@@ -359,6 +359,10 @@ public:
   void reloadPreset(bool forceReload);
   void loadNextSlow();
   void initMidi();
+    void setFPS(int fps);
+    std::string getCurrentPreset();
+    //unsigned long addPresetUrl(std::string presetUrl, std::string presetName);
+    
 
     void toggleReload();
     void displayHelp();
