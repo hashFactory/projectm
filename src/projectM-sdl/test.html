@@ -1,0 +1,34 @@
+<html>
+<head>
+<script type="text/javascript">
+
+function sendNext(word)
+{
+	var request = new XMLHttpRequest();
+	request.open('GET', 'http://192.168.1.17:8800/' + word, true);
+	request.send();
+	//fetch('http://192.168.1.17:8800/next');
+}
+
+</script>
+<style type="text/css">
+	.button {
+		text-align: center;
+        width: 100%;
+        height: 50%;
+        font-size: 80;
+        padding: 5px;
+        font-weight: bold;
+        color: white;
+        background-color: black;
+	}
+</style>
+</head>
+<body>
+
+<input type="button" class="button" onclick="sendNext('next')" value="NEXT" />
+<input type="button" class="button" onclick="sendNext('previous')" value="PREVIOUS" />
+
+</body>
+</html>
+

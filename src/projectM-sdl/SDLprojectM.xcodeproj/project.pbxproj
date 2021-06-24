@@ -20,6 +20,7 @@
 		169BC64024CC3B56007B7829 /* presets in Copy Files */ = {isa = PBXBuildFile; fileRef = C307DFD31D565B57002F6B9E /* presets */; };
 		169BC64224CC3FCA007B7829 /* presets in Support files */ = {isa = PBXBuildFile; fileRef = C307DFD31D565B57002F6B9E /* presets */; };
 		169BC65024CC8401007B7829 /* fonts in Copy Files */ = {isa = PBXBuildFile; fileRef = C3D30B8F1BF02BE5009AAACD /* fonts */; };
+		6A30C6C026852D21004063FB /* test.html in Resources */ = {isa = PBXBuildFile; fileRef = 6A30C6BF26852D21004063FB /* test.html */; };
 		6A615C92260548C200717F4E /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C345215D1BF025CF001707D2 /* CoreFoundation.framework */; };
 		6A615C94260548C800717F4E /* CoreMIDI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A615C93260548C800717F4E /* CoreMIDI.framework */; };
 		C345215C1BF025A9001707D2 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C345215B1BF025A9001707D2 /* OpenGL.framework */; };
@@ -152,6 +153,7 @@
 		169BC64D24CC83CD007B7829 /* SDL2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SDL2.framework; sourceTree = "<group>"; };
 		16B52AA8211054E900830F34 /* projectMSDL-pkg.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "projectMSDL-pkg.plist"; sourceTree = "<group>"; };
 		16B52AAA21105A6900830F34 /* config.inp */ = {isa = PBXFileReference; lastKnownFileType = text; path = config.inp; sourceTree = "<group>"; };
+		6A30C6BF26852D21004063FB /* test.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = test.html; sourceTree = "<group>"; };
 		6A615C93260548C800717F4E /* CoreMIDI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMIDI.framework; path = System/Library/Frameworks/CoreMIDI.framework; sourceTree = SDKROOT; };
 		C307DFD31D565B57002F6B9E /* presets */ = {isa = PBXFileReference; lastKnownFileType = folder; name = presets; path = ../../presets; sourceTree = "<group>"; };
 		C34521441BF02294001707D2 /* SDLprojectM */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = SDLprojectM; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -239,6 +241,7 @@
 		C345213B1BF02293001707D2 = {
 			isa = PBXGroup;
 			children = (
+				6A30C6BF26852D21004063FB /* test.html */,
 				C60BD8E1259CF3CA0038831F /* SDLprojectM.entitlements */,
 				169501FF1F7009E9008FAF86 /* pmSDL.hpp */,
 				169501FE1F7009E9008FAF86 /* pmSDL.cpp */,
@@ -386,6 +389,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6A30C6C026852D21004063FB /* test.html in Resources */,
 				168F718021126256001806E7 /* AppIcon.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
