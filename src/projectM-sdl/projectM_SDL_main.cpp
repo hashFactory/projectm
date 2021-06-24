@@ -42,6 +42,10 @@
 
 #include "pmSDL.hpp"
 
+//#include "httplib.h"
+#define HTTPSERVER_IMPL
+#include "httpserver.h"
+
 #include <CoreMIDI/MIDIServices.h>
 //#include <CoreFoundation/CFRunLoop.h>
 
@@ -63,6 +67,7 @@ void DebugLog(GLenum source,
        }
  }
 #endif
+
 /*
 MIDIPortRef     gOutPort = NULL;
 MIDIEndpointRef gDest = NULL;
@@ -172,7 +177,8 @@ int miditest(int argc)
 
 //projectMSDL *pm2;
 
-//static projectMSDL *pm;
+static projectMSDL *pm;
+struct http_server_s* server;
 
 
 // return path to config file to use
@@ -259,6 +265,33 @@ HRESULT get_default_device(IMMDevice **ppMMDevice) {
 }
 
 #endif /** WASAPI_LOOPBACK */
+
+int request_target_is(struct http_request_s* request, char const * target) {
+  /*http_string_t url = http_request_target(request);
+  int len = strlen(target);
+  return len == url.len && memcmp(url.buf, target, url.len) == 0;*/
+}
+
+#define RESPONSE "Hello, World!"
+void handle_request(struct http_request_s* request) {
+    struct http_response_s* response = http_response_init();
+    
+    if (request->stream.buf) {
+        std::cout << request->stream.buf << "\n";
+        
+        if (request->stream.buf[5] == 'n') {
+            pm->selectNext(true);
+        }
+        if (request->stream.buf[5] == 'p') {
+            pm->selectPrevious(true);
+        }
+    }
+    
+    http_response_status(response, 200);
+    http_response_header(response, "Content-Type", "text/plain");
+    http_response_body(response, RESPONSE, sizeof(RESPONSE) - 1);
+    http_respond(request, response);
+}
 
 int main(int argc, char *argv[]) {
 #ifndef WIN32
@@ -465,6 +498,7 @@ srand((int)(time(NULL)));
 
     
     projectMSDL *app;
+    //httplib::Server server;
     
     std::string base_path = DATADIR_PATH;
     SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "Using data directory: %s\n", base_path.c_str());
@@ -564,8 +598,24 @@ modKey = "CMD";
     //pm2 = app;
     //projectMSDL::pm2 = &app;
     //miditest(2);
-    //pm = app;
+    pm = app;
     
+    server = http_server_init(8800, handle_request);
+    http_server_listen_poll(server);
+    /*
+    server.Get("/next", [](const httplib::Request & req, httplib::Response &res) {
+        res.set_content("next", "text/plain");
+        pm->selectNext(true);
+    });
+    
+    server.Get("/previous", [](const httplib::Request & req, httplib::Response &res) {
+        res.set_content("previous", "text/plain");
+        pm->selectPrevious(true);
+    });
+    std::cout << "before\n";
+    server.listen("localhost", 8800);
+    std::cout << "hree\n";
+    */
 
 #if STEREOSCOPIC_SBS
 	app->toggleFullScreen();
@@ -617,6 +667,8 @@ modKey = "CMD";
 #endif
 
     // standard main loop
+    //int fps = app->settings().fps;
+    // remove this
     int fps = app->settings().fps;
     printf("fps: %d\n", fps);
     if (fps <= 0)
@@ -624,6 +676,7 @@ modKey = "CMD";
     const Uint32 frame_delay = 1000/fps;
     Uint32 last_time = SDL_GetTicks();
     while (! app->done) {
+        http_server_poll(server);
         app->renderFrame();
 #if FAKE_AUDIO
 		app->fakeAudio  = true;

@@ -22,6 +22,7 @@ using namespace std::chrono;
 
 #define GLT_IMPLEMENTATION
 #define GLT_DEBUG_PRINT
+#define __gl_h_
 #include "gltext.h"
 
 #endif /** USE_TEXT_MENU */
