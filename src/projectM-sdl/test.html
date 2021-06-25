@@ -10,25 +10,109 @@ function sendNext(word)
 	//fetch('http://192.168.1.17:8800/next');
 }
 
+var response = "";
+var values = [];
+
+function getShader()
+{
+	var request = new XMLHttpRequest();
+	request.open('GET', 'http://192.168.1.17:8800/r', false);
+	request.send();
+	response = request.responseText;
+	if (response) {
+		let arr = response.split("\r\n");
+		document.getElementById('editable').innerText = "";
+		var inner = "";
+		let innie = document.getElementById('editable');
+		
+		for (var i = 0; i < arr.length; i++) {
+			//if (arr[i].includes("=")) {
+				let left = arr[i].split("=")[0];
+				let right = arr[i].split("=")[1];
+				
+				//if (right) {
+					inner += arr[i] + "\n";//left + "=" + right + "\n";
+				//}
+				//console.log("Left: " + left + ", Right: " + right);
+			//}
+		}
+		innie.innerText = inner;
+		console.log(arr);
+	}
+}
+
+function pushShader()
+{
+	var request = new XMLHttpRequest();
+	request.open('POST', 'http://tricha.freeboxos.fr:8800/s', false);
+	request.send(document.getElementById('editable').innerText);
+}
+
 </script>
 <style type="text/css">
+	* {
+		box-sizing: border-box;
+	}
+	body {
+		background: black;
+	}
+	.bigdiv {
+		display: flex;
+		flex-direction: column;
+	}
 	.button {
 		text-align: center;
-        width: 100%;
-        height: 50%;
-        font-size: 80;
-        padding: 5px;
+        width: 50%;
+        height: auto%;
+        font-size: 100%;
+        padding: 1px;
+        border-bottom: 1em;
+        border-style: solid #D0CCC5;
+        border-width: 1em;
+        font-weight: bold;
+        -webkit-appearance: none !important;
+        color: #D0CCC5;
+        background-color: black;
+	}
+	.box {
+		flex: 1;
+        width: 99%;
+        height: auto;
+        max-height: 100%;
+        font-size: 100%;
+        padding: 1px;
         font-weight: bold;
         color: white;
         background-color: black;
+        overflow-x: hidden;
+  		overflow-y: auto;
+	}
+	.directions {
+		flex-basis: 1;
+		display: flex;
+		min-height: 75px;
+		margin: 2px;
 	}
 </style>
 </head>
 <body>
+<div class="bigdiv">
 
-<input type="button" class="button" onclick="sendNext('next')" value="NEXT" />
+<div class="directions">
 <input type="button" class="button" onclick="sendNext('previous')" value="PREVIOUS" />
+<input type="button" class="button" onclick="sendNext('next')" value="NEXT" />
+</div>
 
+<p id="editable" contenteditable="true" class="box" style="font-size: smaller; font-weight: normal; font-family: monospace, monospace; text-align: left;">
+  
+</p>
+
+<div class="directions">
+<input type="button" class="button" onclick="getShader()" value="FETCH" />
+<input type="button" class="button" onclick="pushShader()" value="SUBMIT" />
+</div>
+
+</div>
 </body>
 </html>
 

@@ -1,0 +1,41 @@
+<html>
+<head>
+<script type="text/javascript">
+function sendRequest(word)
+{
+	var request = new XMLHttpRequest();
+	request.open('GET', 'http://tricha.freeboxos.fr:8800/' + word, true);
+	request.send();
+	//fetch('http://192.168.1.17:8800/next');
+}
+</script>
+<style type="text/css">
+	body {
+		background: black;
+	}
+	.button {
+		text-align: center;
+        width: 100%;
+        height: 33%;
+        font-size: 80;
+        padding: 5px;
+        border-bottom: 1em;
+        border-style: solid #D0CCC5;
+        border-width: 0.075in;
+        font-weight: bold;
+        -webkit-appearance: none !important;
+        color: #D0CCC5;
+        background-color: black;
+	}
+</style>
+<title>Tristan's club</title>
+</head>
+<body>
+
+<input type="button" class="button" onclick="sendRequest('next')" value="NEXT" />
+<input type="button" class="button" onclick="sendRequest('y')" value="RANDOM" />
+<input type="button" class="button" onclick="sendRequest('previous')" value="PREVIOUS" />
+
+</body>
+</html>
+
