@@ -153,7 +153,6 @@
 		6A14428D25FB992000A94145 /* librtmidi_la-rtmidi_c.o in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A14428925FB992000A94145 /* librtmidi_la-rtmidi_c.o */; };
 		6A14428E25FB992000A94145 /* librtmidi_la-RtMidi.o in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A14428A25FB992000A94145 /* librtmidi_la-RtMidi.o */; };
 		6A14428F25FB992000A94145 /* librtmidi_la-rtmidi_c.lo in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A14428B25FB992000A94145 /* librtmidi_la-rtmidi_c.lo */; };
-		6A30C6B42684FF50004063FB /* httplib.h in Headers */ = {isa = PBXBuildFile; fileRef = 6A30C6B32684FF50004063FB /* httplib.h */; };
 		6A30C6BA268503D5004063FB /* httpserver.h in Headers */ = {isa = PBXBuildFile; fileRef = 6A30C6B9268503D5004063FB /* httpserver.h */; };
 		6A9072CC25FB36FD00D6DB91 /* RtMidi.h in Headers */ = {isa = PBXBuildFile; fileRef = 6A9072CB25FB36FD00D6DB91 /* RtMidi.h */; };
 		6A9072D225FB370700D6DB91 /* RtMidi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6A9072D125FB370700D6DB91 /* RtMidi.cpp */; };
@@ -293,7 +292,6 @@
 		6A14428925FB992000A94145 /* librtmidi_la-rtmidi_c.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = "librtmidi_la-rtmidi_c.o"; sourceTree = "<group>"; };
 		6A14428A25FB992000A94145 /* librtmidi_la-RtMidi.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = "librtmidi_la-RtMidi.o"; sourceTree = "<group>"; };
 		6A14428B25FB992000A94145 /* librtmidi_la-rtmidi_c.lo */ = {isa = PBXFileReference; lastKnownFileType = text; path = "librtmidi_la-rtmidi_c.lo"; sourceTree = "<group>"; };
-		6A30C6B32684FF50004063FB /* httplib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = httplib.h; sourceTree = "<group>"; };
 		6A30C6B9268503D5004063FB /* httpserver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = httpserver.h; sourceTree = "<group>"; };
 		6A9072CB25FB36FD00D6DB91 /* RtMidi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RtMidi.h; sourceTree = "<group>"; };
 		6A9072D125FB370700D6DB91 /* RtMidi.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RtMidi.cpp; sourceTree = "<group>"; };
@@ -395,7 +393,6 @@
 			isa = PBXGroup;
 			children = (
 				6A30C6B9268503D5004063FB /* httpserver.h */,
-				6A30C6B32684FF50004063FB /* httplib.h */,
 				6A9072CB25FB36FD00D6DB91 /* RtMidi.h */,
 				1657E00F23DF788F00B25D5C /* projectM.hpp */,
 				1612C9FC207A878800862A3A /* carbontoprojectM.h */,
@@ -643,7 +640,6 @@
 				1612CA00207A878900862A3A /* cocoatoprojectM.h in Headers */,
 				6A9072CC25FB36FD00D6DB91 /* RtMidi.h in Headers */,
 				1612CA07207A878900862A3A /* wipemalloc.h in Headers */,
-				6A30C6B42684FF50004063FB /* httplib.h in Headers */,
 				169BC64A24CC4D16007B7829 /* FileScanner.hpp in Headers */,
 				1612CA06207A878900862A3A /* sdltoprojectM.h in Headers */,
 				1612CA09207A878900862A3A /* fftsg.h in Headers */,

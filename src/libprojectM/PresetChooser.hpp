@@ -47,6 +47,8 @@ public:
 
     ///  Set the chooser asocciated with this iterator
     void setChooser(const PresetChooser & chooser);
+    
+    std::size_t getCurrentIndex();
 
 private:
     std::size_t _currentIndex;
@@ -117,6 +119,10 @@ inline PresetChooser::PresetChooser(const PresetLoader & presetLoader, bool soft
 
 inline std::size_t PresetChooser::size() const {
     return _presetLoader->size();
+}
+
+inline std::size_t PresetIterator::getCurrentIndex() {
+    return _currentIndex;
 }
 
 inline void PresetIterator::setChooser(const PresetChooser & chooser) {

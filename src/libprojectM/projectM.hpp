@@ -360,7 +360,8 @@ public:
   void loadNextSlow();
   void initMidi();
     void setFPS(int fps);
-    std::string getCurrentPreset();
+    int getCurrentPreset();
+    
     //unsigned long addPresetUrl(std::string presetUrl, std::string presetName);
     
 

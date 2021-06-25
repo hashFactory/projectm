@@ -592,8 +592,12 @@ void projectM::setFPS(int fps) {
     log("Updated fps\n");
 }
 
-std::string projectM::getCurrentPreset() {
-    return this->m_activePreset->name();
+int projectM::getCurrentPreset() {
+    //return this->m_activePreset->name();
+    return m_presetPos->lastIndex();
+    //m_presetLoader->loadPreset(<#const std::string &url#>);
+    //return this->renderer->m_activePresetID;
+    //return this->
 }
 
 // Display all settings
